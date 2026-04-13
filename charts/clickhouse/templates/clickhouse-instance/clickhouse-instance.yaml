@@ -23,7 +23,15 @@ spec:
 
   configuration:
     users:
+      {{- if .Values.existingSecret }}
+      {{ .Values.user }}/password:
+        valueFrom:
+          secretKeyRef:
+            name: {{ .Values.existingSecret }}
+            key: {{ required "existingSecretPasswordKey is required when existingSecret is set" .Values.existingSecretPasswordKey }}
+      {{- else }}
       {{ .Values.user }}/password: {{ .Values.password }}
+      {{- end }}
       {{ .Values.user }}/networks/ip:
         {{- range $.Values.allowedNetworkIps }}
         - {{ . | quote }}
@@ -57,7 +65,13 @@ spec:
           string created_at = 7;
           string elements_chain = 8;
         }
-      {{- if .Values.coldStorage.enabled }}
+      {{- if and .Values.coldStorage.enabled .Values.coldStorage.existingSecret }}
+      config.d/storage.xml:
+        valueFrom:
+          secretKeyRef:
+            name: {{ .Values.coldStorage.existingSecret }}
+            key: {{ required "coldStorage.existingSecretKey is required when coldStorage.existingSecret is set" .Values.coldStorage.existingSecretKey }}
+      {{- else if .Values.coldStorage.enabled }}
       config.d/storage.xml: |
         <clickhouse>
           <storage_configuration>

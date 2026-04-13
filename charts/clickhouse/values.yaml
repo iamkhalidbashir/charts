@@ -156,6 +156,10 @@ logDatabase: signoz_logs
 user: admin
 # -- Clickhouse password
 password: 27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+# -- Name of an existing Kubernetes secret containing the ClickHouse password.
+existingSecret: ""
+# -- Key in the existing secret that contains the ClickHouse password.
+existingSecretPasswordKey: ""
 
 # -- Clickhouse cluster replicas
 replicasCount: 1
@@ -171,7 +175,7 @@ image:
   # -- Clickhouse image tag.
   # Note: SigNoz does not support all versions of ClickHouse.
   # Please override the default only if you know what you are doing.
-  tag: 24.1.2-alpine
+  tag: 25.5.6
   # -- Clickhouse image pull policy.
   pullPolicy: IfNotPresent
 
@@ -439,6 +443,10 @@ additionalVolumeMounts: []
 coldStorage:
   # -- Whether to enable S3 or GCS cold storage
   enabled: false
+  # -- Name of an existing Kubernetes secret containing a complete storage.xml payload.
+  existingSecret: ""
+  # -- Key in the existing secret that contains the storage.xml payload.
+  existingSecretKey: ""
   # -- Reserve free space on default disk (in bytes)
   # Default value set below is 10MiB
   defaultKeepFreeSpaceBytes: "10485760"

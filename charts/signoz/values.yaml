@@ -189,6 +189,14 @@ clickhouse:
   # @section -- ClickHouse Settings
   # @default -- "27ff0399-0d3a-4bd8-919d-17c2181e6fb9"
   password: 27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+  # clickhouse.existingSecret - Name of an existing Kubernetes secret containing the bundled ClickHouse password.
+  # @section -- ClickHouse Settings
+  # @default -- null
+  existingSecret:
+  # clickhouse.existingSecretPasswordKey - Key in the existing secret that contains the bundled ClickHouse password.
+  # @section -- ClickHouse Settings
+  # @default -- null
+  existingSecretPasswordKey:
   # clickhouse.image -- ClickHouse image configuration.
   # @section -- ClickHouse Image
   image:

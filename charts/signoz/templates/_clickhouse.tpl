@@ -44,8 +44,16 @@ Minimized ClickHouse ENV variables for user credentials
   value: {{ .Values.clickhouse.cluster | quote }}
 - name: CLICKHOUSE_USER
   value: {{ .Values.clickhouse.user | quote }}
+{{- if .Values.clickhouse.existingSecret }}
+- name: CLICKHOUSE_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.clickhouse.existingSecret | quote }}
+      key: {{ required "clickhouse.existingSecretPasswordKey is required when clickhouse.existingSecret is set" .Values.clickhouse.existingSecretPasswordKey | quote }}
+{{- else }}
 - name: CLICKHOUSE_PASSWORD
   value: {{ .Values.clickhouse.password | quote }}
+{{- end }}
 - name: CLICKHOUSE_SECURE
   value: {{ .Values.clickhouse.secure | quote }}
 {{- else -}}
@@ -165,7 +173,7 @@ Return the ClickHouse Metrics URL
 */}}
 {{- define "clickhouse.metricsUrl" -}}
 {{- if .Values.clickhouse.enabled -}}
-  tcp://{{ .Values.clickhouse.user }}:{{ .Values.clickhouse.password }}@{{ include "clickhouse.servicename" . }}:{{ include "clickhouse.tcpPort" . }}/{{ .Values.clickhouse.database -}}
+  tcp://{{ .Values.clickhouse.user }}:$(CLICKHOUSE_PASSWORD)@{{ include "clickhouse.servicename" . }}:{{ include "clickhouse.tcpPort" . }}/{{ .Values.clickhouse.database -}}
 {{- else -}}
   tcp://{{ .Values.externalClickhouse.user }}:{{ include "clickhouse.externalPasswordKey" . }}@{{- required "externalClickhouse.host is required if using external clickhouse" .Values.externalClickhouse.host }}:{{ include "clickhouse.tcpPort" . }}/{{ .Values.externalClickhouse.database -}}
 {{- end -}}
@@ -176,7 +184,7 @@ Return the ClickHouse Traces URL
 */}}
 {{- define "clickhouse.tracesUrl" -}}
 {{- if .Values.clickhouse.enabled -}}
-  tcp://{{ .Values.clickhouse.user }}:{{ .Values.clickhouse.password }}@{{ include "clickhouse.servicename" . }}:{{ include "clickhouse.tcpPort" . }}/{{ .Values.clickhouse.traceDatabase -}}
+  tcp://{{ .Values.clickhouse.user }}:$(CLICKHOUSE_PASSWORD)@{{ include "clickhouse.servicename" . }}:{{ include "clickhouse.tcpPort" . }}/{{ .Values.clickhouse.traceDatabase -}}
 {{- else -}}
   tcp://{{ .Values.externalClickhouse.user }}:$(CLICKHOUSE_PASSWORD)@{{ required "externalClickhouse.host is required if using external clickhouse" .Values.externalClickhouse.host }}:{{ include "clickhouse.tcpPort" . }}/{{ .Values.externalClickhouse.traceDatabase -}}
 {{- end -}}
