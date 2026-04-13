@@ -27,11 +27,7 @@ spec:
   configuration:
     users:
       {{- if .Values.existingSecret }}
-      {{ .Values.user }}/password:
-        valueFrom:
-          secretKeyRef:
-            name: {{ .Values.existingSecret }}
-            key: {{ required "existingSecretPasswordKey is required when existingSecret is set" .Values.existingSecretPasswordKey }}
+      {{ .Values.user }}/k8s_secret_password: {{ .Values.existingSecret }}/{{ required "existingSecretPasswordKey is required when existingSecret is set" .Values.existingSecretPasswordKey }}
       {{- else }}
       {{ .Values.user }}/password: {{ .Values.password }}
       {{- end }}
