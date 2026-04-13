@@ -156,6 +156,10 @@ logDatabase: signoz_logs
 user: admin
 # -- Clickhouse password
 password: 27ff0399-0d3a-4bd8-919d-17c2181e6fb9
+# -- Unique task ID used to trigger ClickHouse operator reconciliation.
+# Change this value to force the operator to re-read referenced secrets
+# (e.g. after rotating the ClickHouse password secret).
+taskID: ""
 # -- Name of an existing Kubernetes secret containing the ClickHouse password.
 existingSecret: ""
 # -- Key in the existing secret that contains the ClickHouse password.

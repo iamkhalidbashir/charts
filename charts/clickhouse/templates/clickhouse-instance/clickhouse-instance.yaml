@@ -13,6 +13,9 @@ metadata:
     {{- toYaml .Values.annotations | nindent 4 }}
   {{- end }}
 spec:
+  {{- with .Values.taskID }}
+  taskID: {{ . | quote }}
+  {{- end }}
   defaults:
     templates:
       {{- if and (.Values.persistence.enabled) (not .Values.persistence.existingClaim) }}
